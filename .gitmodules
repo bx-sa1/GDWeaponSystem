@@ -1,0 +1,3 @@
+[submodule "tests/addons/GDPlayerControllers"]
+	path = tests/addons/GDPlayerControllers
+	url = https://github.com/bx-sa1/GDPlayerControllers.git

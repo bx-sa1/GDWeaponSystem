@@ -1,76 +1,90 @@
 class_name WeaponController extends Node3D
 
-@export_category("Key Actions")
-@export var weapon_up_action: String = "weapon_up"
-@export var weapon_down_action: String = "weapon_down"
-@export var fire_action: String = "fire"
 @export_category("Settings")
-@export_flags_3d_physics var ray_collision_mask = 1
-@export var parent_node: Node
-@export var weapon_list: Array[Weapon] = []
-@export var fire_from_center_of_screen = false
+@export_flags_3d_physics var ray_collision_mask: int = 0b1
+@export var parent_node: Node3D
+@export var weapon_list: Array[PackedScene] = []
+@export var give_all_weapons = false
 
+var weapon_stack: Array[Weapon]
 var current_weapon_id: int = -1
 
-signal hit(weapon: Weapon, hit_pos: Vector3, hit_normal: Vector3, collider: Node)
 signal weapon_changed(old_weapon: Weapon, new_weapon: Weapon)
+signal reload_finished
 
 func _ready() -> void:
-	for weapon in weapon_list:
-		weapon.hit.connect(_on_weapon_hit)
+	if give_all_weapons:
+		give_weapon("debug_all")
 	change_weapon(0)
 
-func _process(delta: float) -> void:
-	weapon_list[current_weapon_id].update(delta)
+func is_fire_pressed(fire_action: String) -> bool:
+	var weapon = get_current_weapon()
+	if not weapon:
+		return false
 
-func is_weapon_up_pressed() -> bool:
-	return Input.is_action_just_pressed(weapon_up_action)
-
-func is_weapon_down_pressed() -> bool:
-	return Input.is_action_just_pressed(weapon_down_action)
-
-func is_fire_pressed() -> bool:
-	if weapon_list[current_weapon_id].auto:
-		return Input.is_action_just_pressed(fire_action)
-	else:
+	if weapon.data.auto:
 		return Input.is_action_pressed(fire_action)
+	else:
+		return Input.is_action_just_pressed(fire_action)
+
+func give_weapon(weapon_name: String) -> void:
+	for weapon in weapon_list:
+		var inst: Weapon = weapon.instantiate()
+		if inst.data.name == weapon_name or weapon_name == "debug_all":
+			var slot = inst.data.slot
+			if slot == -1:
+				weapon_stack.push_back(inst)
+			else:
+				weapon_stack.resize(slot - len(weapon_stack))
+				weapon_stack[slot] = inst
 
 func change_weapon(new_id: int) -> void:
-	if new_id < 0:
-		new_id = len(weapon_list) - 1
-	elif new_id >= len(weapon_list):
-		new_id = 0
-
-	var current_weapon = weapon_list[current_weapon_id] if current_weapon_id != -1 else null
-	var new_weapon = weapon_list[new_id]
-	weapon_changed.emit(current_weapon, new_weapon)
-
-	if current_weapon != null:
-		parent_node.remove_child(current_weapon.get_scene_instance())
-
-	parent_node.add_child(new_weapon.get_scene_instance())
-	current_weapon_id = new_id
-
-func fire() -> void:
-	var weapon = get_current_weapon()
-	if weapon.should_reload():
-		weapon.reload()
-	if not weapon.can_fire():
+	if len(weapon_stack) == 0:
 		return
 
-	weapon.fire(ray_collision_mask, fire_from_center_of_screen)
+	if new_id < 0:
+		new_id = len(weapon_stack) - 1
+	elif new_id >= len(weapon_stack):
+		new_id = 0
+
+	var current_weapon: Weapon = weapon_stack[current_weapon_id] if current_weapon_id != -1 else null
+	var new_weapon: Weapon = weapon_stack[new_id]
+	if new_weapon == null:
+		change_weapon(new_id + 1)
+	current_weapon_id = new_id
+
+	if current_weapon != null:
+		parent_node.remove_child(current_weapon)
+
+	parent_node.add_child(new_weapon)
+	new_weapon.owner = owner
+
+	weapon_changed.emit(current_weapon, new_weapon)
+
+func reload() -> void:
+	var weapon = get_current_weapon()
+	if not weapon:
+		return
+
+	weapon.reload()
+
+func fire(origin: Vector3, dir: Vector3) -> void:
+	var weapon = get_current_weapon()
+	if not weapon:
+		return
+
+	var hits = weapon.fire(origin, dir, ray_collision_mask)
+	if hits != [null]:
+		for hit in hits:
+			_add_decal_to_world(weapon, hit)
 
 func get_current_weapon() -> Weapon:
-	return weapon_list[current_weapon_id]
+	return weapon_stack[current_weapon_id] if current_weapon_id > -1 else null
 
-func _add_decal_to_world(weapon: Weapon, hitpos: Vector3, hitnormal: Vector3):
-	var decal: Node3D = weapon.ammo_hit_decal.instantiate()
-	owner.add_child(decal)
+func _add_decal_to_world(weapon: Weapon, hit: WeaponFireStrategy.WeaponHit):
+	var decal: Node3D = weapon.data.hit_decal.instantiate()
+	get_tree().get_root().add_child(decal)
 
-	decal.global_position = hitpos + hitnormal * 0.01
-	var decal_rotation = Quaternion(decal.global_basis.z, hitnormal)
+	decal.global_position = hit.position + hit.normal * 0.01
+	var decal_rotation = Quaternion(decal.global_basis.z, hit.normal)
 	decal.quaternion *= decal_rotation
-
-func _on_weapon_hit(weapon: Weapon, hit_pos: Vector3, hit_normal: Vector3, collider: Node) -> void:
-	_add_decal_to_world(weapon, hit_pos, hit_normal)
-	hit.emit(weapon, hit_pos, hit_normal, collider)
