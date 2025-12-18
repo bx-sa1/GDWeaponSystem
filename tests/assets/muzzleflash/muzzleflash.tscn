@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwykkhvjuhcfo"]
+
+[ext_resource type="Texture2D" uid="uid://cvr35tkvbuhda" path="res://assets/muzzleflash/muzzleflash.png" id="1_y5yye"]
+
+[node name="Muzzleflash" type="Node3D"]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(-0.3, 0, -2.6226834e-08, 0, 0.3, 0, 2.6226834e-08, 0, -0.3, 0, 0, 0.9669)
+axis = 0
+texture = ExtResource("1_y5yye")

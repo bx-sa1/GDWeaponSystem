@@ -1,0 +1,44 @@
+[gd_scene load_steps=12 format=3 uid="uid://shwpyanl25m5"]
+
+[ext_resource type="ArrayMesh" uid="uid://b7gnt36rftih7" path="res://assets/pistol/HL2 Pistol.obj" id="1_8h3ih"]
+[ext_resource type="Script" uid="uid://xfxkyhr4wce6" path="res://scripts/weapon.gd" id="1_mc0p0"]
+[ext_resource type="Script" uid="uid://cv3byi5ldhwhg" path="res://scripts/extras/hitscan_fire_strategy.gd" id="2_7efyj"]
+[ext_resource type="PackedScene" uid="uid://fql5abvr4p56" path="res://assets/bullethole/bullet_hole.tscn" id="2_jaxh7"]
+[ext_resource type="Script" uid="uid://ckf1jwcbvo6dj" path="res://scripts/weapon_data.gd" id="3_7efyj"]
+[ext_resource type="Script" uid="uid://ct5rddotr43cs" path="res://scripts/weapon_post_fire_strategy.gd" id="4_b2vig"]
+[ext_resource type="PackedScene" uid="uid://cwykkhvjuhcfo" path="res://assets/muzzleflash/muzzleflash.tscn" id="5_cu15p"]
+[ext_resource type="Script" uid="uid://cgmcwet3q6jm3" path="res://scripts/extras/muzzle_flash_post_fire_strategy.gd" id="6_oeswm"]
+
+[sub_resource type="Resource" id="Resource_b2vig"]
+script = ExtResource("2_7efyj")
+metadata/_custom_type_script = "uid://cv3byi5ldhwhg"
+
+[sub_resource type="Resource" id="Resource_xnoi6"]
+script = ExtResource("6_oeswm")
+muzzle_flash_scene = ExtResource("5_cu15p")
+metadata/_custom_type_script = "uid://cgmcwet3q6jm3"
+
+[sub_resource type="Resource" id="Resource_68f26"]
+script = ExtResource("3_7efyj")
+name = "Pistol"
+hit_decal = ExtResource("2_jaxh7")
+slot = 1
+max_ammo_count = 24
+fire_rate = 5.0
+spread = 0.2
+damage = 10.0
+fire_strategy = SubResource("Resource_b2vig")
+post_fire_strategies = Array[ExtResource("4_b2vig")]([SubResource("Resource_xnoi6")])
+metadata/_custom_type_script = "uid://ckf1jwcbvo6dj"
+
+[node name="Pistol" type="Node3D"]
+script = ExtResource("1_mc0p0")
+data = SubResource("Resource_68f26")
+metadata/_custom_type_script = "uid://xfxkyhr4wce6"
+
+[node name="Hl2Pistol" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.06, 0, -5.2453664e-09, 0, 0.06, 0, 5.2453664e-09, 0, -0.06, 0, 0, 0)
+mesh = ExtResource("1_8h3ih")
+
+[node name="Marker3D" type="Marker3D" parent="." groups=["fire_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.017698467, 0.024777904, 0.34942535)

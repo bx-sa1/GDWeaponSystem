@@ -13,29 +13,40 @@ class_name WeaponData extends Resource
 @export var spread: float = 0.0
 @export var auto: bool = false
 @export var damage: float
-@export var reload_time: float = 1.0
-# How far ammunitions can go
-@export var fire_range: float = 1000
 
 @export_category("Strategies")
 @export var fire_strategy: WeaponFireStrategy
+@export var post_fire_strategies: Array[WeaponPostFireStrategy]
 
 var ammo_count: int = max_ammo_count
 var cooldown: bool = false
 var t_cooldown: float
 var reloading: bool = false
-var t_reloading: float
 
 signal cooldown_finished
+
+func init() -> void:
+	ammo_count = max_ammo_count
+	reloading = false
+	cooldown = false
 
 func is_coolingdown() -> bool:
 	return cooldown
 
 func should_reload() -> bool:
-	return ammo_count == 0 and not is_infinite_ammo
+	return ammo_count == 0 and not is_infinite_ammo()
 
 func is_infinite_ammo() -> bool:
 	return max_ammo_count == 0
+
+func reload(action: Callable) -> void:
+	if reloading:
+		return
+
+	reloading = true
+	await action.call()
+	ammo_count = max_ammo_count
+	reloading = false
 
 func fire() -> int: # return how much is acctually fire
 	var ammount
@@ -56,6 +67,8 @@ func update_cooldown(delta: float) -> void:
 		if t_cooldown <= 0:
 			cooldown = false
 			cooldown_finished.emit()
+	else:
+		t_cooldown = 1.0/fire_rate
 
 func get_rand_spread_angle() -> float:
 	return randf_range(-deg_to_rad(spread), deg_to_rad(spread))

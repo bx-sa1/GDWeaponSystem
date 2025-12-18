@@ -1,0 +1,58 @@
+[gd_scene load_steps=10 format=3 uid="uid://bxaifjr6kaft5"]
+
+[ext_resource type="Script" uid="uid://bo4eg0ixqt8wf" path="res://scenes/enemy/enemy.gd" id="1_tjssy"]
+[ext_resource type="Script" uid="uid://b2xa273ecr0ju" path="res://addons/GDPlayerControllers/scripts/components/character_component.gd" id="2_gl05p"]
+[ext_resource type="Script" uid="uid://dksuroetqt32s" path="res://addons/GDPlayerControllers/scripts/components/walk_component.gd" id="3_cwlon"]
+[ext_resource type="Script" uid="uid://wu7v1bm14cdl" path="res://scenes/enemy/enemy_head.gd" id="4_nbhyu"]
+
+[sub_resource type="Resource" id="Resource_3yqyl"]
+script = ExtResource("3_cwlon")
+move_speed = 10.0
+always_active = true
+default_active = true
+metadata/_custom_type_script = "uid://dksuroetqt32s"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iifgy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_epg4t"]
+albedo_color = Color(1, 0, 0.20392157, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3yqyl"]
+material = SubResource("StandardMaterial3D_epg4t")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iifgy"]
+viewport_path = NodePath("Head/Healthbar/SubViewport")
+
+[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("head", "visual", "collision")]
+script = ExtResource("1_tjssy")
+head = NodePath("Head")
+visual = NodePath("MeshInstance3D")
+collision = NodePath("CollisionShape3D")
+components = Array[ExtResource("2_gl05p")]([SubResource("Resource_3yqyl")])
+metadata/_custom_type_script = "uid://cl4kl6fjoxu57"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_iifgy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_3yqyl")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3931327, 0)
+script = ExtResource("4_nbhyu")
+
+[node name="Healthbar" type="Sprite3D" parent="Head"]
+billboard = 1
+texture = SubResource("ViewportTexture_iifgy")
+
+[node name="SubViewport" type="SubViewport" parent="Head/Healthbar"]
+size = Vector2i(128, 32)
+
+[node name="HealthBar" type="ProgressBar" parent="Head/Healthbar/SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

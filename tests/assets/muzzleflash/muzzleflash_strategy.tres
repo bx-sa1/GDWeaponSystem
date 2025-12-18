@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="MuzzleFlashPreFireStrategy" load_steps=3 format=3 uid="uid://bq41vup0lhlkj"]
+
+[ext_resource type="PackedScene" uid="uid://cwykkhvjuhcfo" path="res://assets/muzzleflash/muzzleflash.tscn" id="1_0oycx"]
+[ext_resource type="Script" uid="uid://cgmcwet3q6jm3" path="res://scripts/extras/muzzle_flash_post_fire_strategy.gd" id="1_tti5n"]
+
+[resource]
+script = ExtResource("1_tti5n")
+muzzle_flash_scene = ExtResource("1_0oycx")
+metadata/_custom_type_script = "uid://cgmcwet3q6jm3"

@@ -35,7 +35,8 @@ func give_weapon(weapon_name: String) -> void:
 			if slot == -1:
 				weapon_stack.push_back(inst)
 			else:
-				weapon_stack.resize(slot - len(weapon_stack))
+				if slot >= len(weapon_stack):
+					weapon_stack.resize(slot + 1)
 				weapon_stack[slot] = inst
 
 func change_weapon(new_id: int) -> void:
@@ -76,12 +77,13 @@ func fire(origin: Vector3, dir: Vector3) -> void:
 	var hits = weapon.fire(origin, dir, ray_collision_mask)
 	if hits != [null]:
 		for hit in hits:
-			_add_decal_to_world(weapon, hit)
+			if weapon.data.hit_decal:
+				_add_decal_to_world(weapon, hit)
 
 func get_current_weapon() -> Weapon:
 	return weapon_stack[current_weapon_id] if current_weapon_id > -1 else null
 
-func _add_decal_to_world(weapon: Weapon, hit: WeaponFireStrategy.WeaponHit):
+func _add_decal_to_world(weapon: Weapon, hit: WeaponHit):
 	var decal: Node3D = weapon.data.hit_decal.instantiate()
 	get_tree().get_root().add_child(decal)
 

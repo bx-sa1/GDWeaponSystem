@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=5 format=3 uid="uid://npcgdugjyd0t"]
+
+[ext_resource type="Script" uid="uid://bnavi3cu1slsp" path="res://scripts/extras/melee_fire_strategy.gd" id="1_w8trs"]
+[ext_resource type="PackedScene" uid="uid://fql5abvr4p56" path="res://assets/bullethole/bullet_hole.tscn" id="1_wknj4"]
+[ext_resource type="Script" uid="uid://ckf1jwcbvo6dj" path="res://scripts/weapon_data.gd" id="3_wn8pm"]
+
+[sub_resource type="Resource" id="Resource_ip0bn"]
+script = ExtResource("1_w8trs")
+metadata/_custom_type_script = "uid://bnavi3cu1slsp"
+
+[resource]
+script = ExtResource("3_wn8pm")
+name = "Crowbar"
+hit_decal = ExtResource("1_wknj4")
+slot = 0
+max_ammo_count = 0
+spread = 1.0
+fire_strategy = SubResource("Resource_ip0bn")
+metadata/_custom_type_script = "uid://ckf1jwcbvo6dj"

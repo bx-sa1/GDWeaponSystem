@@ -1,24 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://rejehoq6iqgq"]
+[gd_scene load_steps=8 format=3 uid="uid://rejehoq6iqgq"]
 
-[ext_resource type="PackedScene" uid="uid://b8x2hcg23kchx" path="res://player.tscn" id="1_ig7tw"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_0xm2m"]
-sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
-
-[sub_resource type="Environment" id="Environment_h2yge"]
-background_mode = 2
-sky = SubResource("Sky_0xm2m")
-tonemap_mode = 2
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0xm2m"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
-albedo_texture = SubResource("PlaceholderTexture2D_0xm2m")
-texture_filter = 2
+[ext_resource type="PackedScene" uid="uid://b8x2hcg23kchx" path="res://scenes/player/player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://ctkorg0vim6ay" path="res://scenes/world/world.tscn" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dfvcevg1ooxdo" path="res://hud.gd" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bxaifjr6kaft5" path="res://scenes/enemy/enemy.tscn" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://cjypxhtgh65p2" path="res://enemy_spawner.gd" id="5_lquwl"]
 
 [sub_resource type="SystemFont" id="SystemFont_ig7tw"]
 
@@ -31,49 +17,19 @@ shadow_size = 0
 
 [node name="Main" type="Node3D"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
-shadow_enabled = true
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_h2yge")
-
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7887394, 0)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-use_collision = true
-size = Vector3(100, 1, 100)
-material = SubResource("StandardMaterial3D_h2yge")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.848076, 2.3849277, 0)
-size = Vector3(1, 4.5166016, 1)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.09124, 1.8348789, 4.193599)
-size = Vector3(2.5136719, 3.416504, 2.8637695)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.012228, 2.3849277, 0)
-size = Vector3(6.439331, 4.5166016, 1)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7836494, 2.8591366, 9.392774)
-size = Vector3(6.439331, 4.5166016, 5.732422)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="CSGBox3D/CSGBox3D4"]
-transform = Transform3D(1, 0, 0, 0, 0.8175672, -0.57583314, 0, 0.57583314, 0.8175672, -0.85881233, 1.021164, 1.0667458)
-operation = 2
-size = Vector3(9.477966, 4.5166016, 9.36499)
-
-[node name="HUD" type="Control" parent="."]
+[node name="HUD" type="Control" parent="." node_paths=PackedStringArray("player")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_h2yge")
+player = NodePath("../Player")
 
 [node name="Crosshair" type="BoxContainer" parent="HUD"]
 layout_mode = 1
@@ -94,3 +50,72 @@ alignment = 1
 layout_mode = 2
 text = "+"
 label_settings = SubResource("LabelSettings_0xm2m")
+
+[node name="WeaponInfo" type="BoxContainer" parent="HUD"]
+layout_mode = 0
+offset_right = 54.0
+offset_bottom = 50.0
+vertical = true
+
+[node name="Ammo" type="BoxContainer" parent="HUD/WeaponInfo"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="HUD/WeaponInfo/Ammo"]
+layout_mode = 2
+text = "Ammo"
+
+[node name="AmmoValue" type="Label" parent="HUD/WeaponInfo/Ammo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "%d/%d"
+
+[node name="State" type="BoxContainer" parent="HUD/WeaponInfo"]
+layout_mode = 2
+
+[node name="Reloading" type="Label" parent="HUD/WeaponInfo/State"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reloading: %s"
+
+[node name="Coolingdown" type="Label" parent="HUD/WeaponInfo/State"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Coolingdown: %s"
+
+[node name="World" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="Enemy" parent="." instance=ExtResource("4_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.408305, 3.4903674, 0)
+
+[node name="EnemySpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3022556, 14.701037)
+script = ExtResource("5_lquwl")
+metadata/_custom_type_script = "uid://cjypxhtgh65p2"
+
+[node name="Marker3D" type="Marker3D" parent="EnemySpawner"]
+gizmo_extents = 10.0
+
+[node name="EnemySpawner2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.510315, 4.816025, 14.701037)
+script = ExtResource("5_lquwl")
+metadata/_custom_type_script = "uid://cjypxhtgh65p2"
+
+[node name="Marker3D" type="Marker3D" parent="EnemySpawner2"]
+gizmo_extents = 10.0
+
+[node name="EnemySpawner3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.510315, 5.7376137, 33.99455)
+script = ExtResource("5_lquwl")
+metadata/_custom_type_script = "uid://cjypxhtgh65p2"
+
+[node name="Marker3D" type="Marker3D" parent="EnemySpawner3"]
+gizmo_extents = 10.0
+
+[node name="EnemySpawner4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.510315, 4.689226, -33.110973)
+script = ExtResource("5_lquwl")
+metadata/_custom_type_script = "uid://cjypxhtgh65p2"
+
+[node name="Marker3D" type="Marker3D" parent="EnemySpawner4"]
+gizmo_extents = 10.0
