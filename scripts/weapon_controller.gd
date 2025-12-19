@@ -1,4 +1,17 @@
+@tool
 class_name WeaponController extends Node3D
+
+@export_tool_button("Debug Viewmodel") var debug_viewmodel = func():
+	var weapon = get_current_weapon()
+	if weapon != null:
+		parent_node.add_child(weapon)
+		weapon.owner = get_tree().edited_scene_root
+
+@export_tool_button("Remove Debug Viewmodel") var remove_debug_viewmodel = func():
+	var weapon = get_current_weapon()
+	if weapon != null:
+		remove_child(weapon)
+		weapon.owner = null
 
 @export_category("Settings")
 @export_flags_3d_physics var ray_collision_mask: int = 0b1
