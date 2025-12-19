@@ -10,7 +10,7 @@ class_name WeaponController extends Node3D
 @export_tool_button("Remove Debug Viewmodel") var remove_debug_viewmodel = func():
 	var weapon = get_current_weapon()
 	if weapon != null:
-		remove_child(weapon)
+		parent_node.remove_child(weapon)
 		weapon.owner = null
 
 @export_category("Settings")
