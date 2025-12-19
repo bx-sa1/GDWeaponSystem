@@ -31,7 +31,7 @@ func fire(origin: Vector3, dir: Vector3, collision_mask: int) -> Array[WeaponHit
 	var hits: Array[WeaponHit] = []
 	for i in ammount:
 		var spread_dir = data.get_spread_dir(dir)
-		var hit = data.fire_strategy.fire(self, origin, spread_dir, collision_mask)
+		var hit = await data.fire_strategy.fire(self, origin, spread_dir, collision_mask)
 		if hit:
 			hits.push_back(hit)
 			for post in data.post_fire_strategies:

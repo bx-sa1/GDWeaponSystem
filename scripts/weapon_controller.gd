@@ -87,7 +87,7 @@ func fire(origin: Vector3, dir: Vector3) -> void:
 	if not weapon:
 		return
 
-	var hits = weapon.fire(origin, dir, ray_collision_mask)
+	var hits = await weapon.fire(origin, dir, ray_collision_mask)
 	if hits != [null]:
 		for hit in hits:
 			if weapon.data.hit_decal:
