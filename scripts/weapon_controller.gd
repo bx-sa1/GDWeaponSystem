@@ -1,17 +1,24 @@
 @tool
 class_name WeaponController extends Node3D
 
+var _debug_viewmodel_weapon: Weapon = null
+
 @export_tool_button("Debug Viewmodel") var debug_viewmodel = func():
-	var weapon = get_current_weapon()
-	if weapon != null:
-		parent_node.add_child(weapon)
-		weapon.owner = get_tree().edited_scene_root
+	if _debug_viewmodel_weapon != null:
+		return
+
+	_debug_viewmodel_weapon = weapon_list[0].instantiate()
+	if _debug_viewmodel_weapon != null:
+		parent_node.add_child(_debug_viewmodel_weapon)
+		_debug_viewmodel_weapon.owner = get_tree().edited_scene_root
 
 @export_tool_button("Remove Debug Viewmodel") var remove_debug_viewmodel = func():
-	var weapon = get_current_weapon()
-	if weapon != null:
-		parent_node.remove_child(weapon)
-		weapon.owner = null
+	if _debug_viewmodel_weapon == null:
+		return
+	else:
+		parent_node.remove_child(_debug_viewmodel_weapon)
+		_debug_viewmodel_weapon.owner = null
+		_debug_viewmodel_weapon = null
 
 @export_category("Settings")
 @export_flags_3d_physics var ray_collision_mask: int = 0b1
@@ -26,6 +33,9 @@ signal weapon_changed(old_weapon: Weapon, new_weapon: Weapon)
 signal reload_finished
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+
 	if give_all_weapons:
 		give_weapon("debug_all")
 	change_weapon(0)
@@ -87,19 +97,7 @@ func fire(origin: Vector3, dir: Vector3) -> void:
 	if not weapon:
 		return
 
-	var hits = await weapon.fire(origin, dir, ray_collision_mask)
-	if hits != [null]:
-		for hit in hits:
-			if weapon.data.hit_decal:
-				_add_decal_to_world(weapon, hit)
+	weapon.fire(origin, dir, ray_collision_mask)
 
 func get_current_weapon() -> Weapon:
 	return weapon_stack[current_weapon_id] if current_weapon_id > -1 else null
-
-func _add_decal_to_world(weapon: Weapon, hit: WeaponHit):
-	var decal: Node3D = weapon.data.hit_decal.instantiate()
-	get_tree().get_root().add_child(decal)
-
-	decal.global_position = hit.position + hit.normal * 0.01
-	var decal_rotation = Quaternion(decal.global_basis.z, hit.normal)
-	decal.quaternion *= decal_rotation

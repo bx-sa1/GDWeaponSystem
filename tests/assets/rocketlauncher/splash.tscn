@@ -1,0 +1,92 @@
+[gd_scene load_steps=8 format=3 uid="uid://d11qkqicqd4"]
+
+[ext_resource type="Script" uid="uid://c58v8fs07vuva" path="res://scripts/extras/projectile_explosion.gd" id="1_ukrvo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5x25"]
+albedo_color = Color(1, 0.34117648, 0.29803923, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ukrvo"]
+material = SubResource("StandardMaterial3D_b5x25")
+
+[sub_resource type="Animation" id="Animation_4xi3p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:mesh:height")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_baqii"]
+resource_name = "splash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.5, 1.65]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:mesh:height")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 3.3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_crusr"]
+_data = {
+&"RESET": SubResource("Animation_4xi3p"),
+&"splash": SubResource("Animation_baqii")
+}
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_baqii"]
+radius = 1.65
+
+[node name="Splash" type="Area3D"]
+collision_layer = 8
+collision_mask = 7
+script = ExtResource("1_ukrvo")
+ttl = 1.0
+force = 100.0
+metadata/_custom_type_script = "uid://c58v8fs07vuva"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ukrvo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_crusr")
+}
+autoplay = "splash"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_baqii")

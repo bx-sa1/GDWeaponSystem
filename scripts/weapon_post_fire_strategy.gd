@@ -1,4 +1,4 @@
 class_name WeaponPostFireStrategy extends Resource
 
-func postfire(weapon: Weapon, hit: WeaponHit) -> void:
+func postfire(weapon: Weapon) -> void:
 	pass

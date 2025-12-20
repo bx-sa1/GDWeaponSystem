@@ -1,0 +1,47 @@
+[gd_scene load_steps=14 format=3 uid="uid://baai6vyw6du3e"]
+
+[ext_resource type="Script" uid="uid://xfxkyhr4wce6" path="res://scripts/weapon.gd" id="1_hwi7l"]
+[ext_resource type="PackedScene" uid="uid://c3uaq4a0j3t6p" path="res://assets/rocketlauncher/rl_projectile.tscn" id="2_45cpp"]
+[ext_resource type="Script" uid="uid://c3drov6fdw0e3" path="res://scripts/extras/projectile_fire_strategy.gd" id="2_a5yl0"]
+[ext_resource type="Script" uid="uid://ct5rddotr43cs" path="res://scripts/weapon_post_fire_strategy.gd" id="3_45cpp"]
+[ext_resource type="PackedScene" uid="uid://fql5abvr4p56" path="res://assets/bullethole/bullet_hole.tscn" id="4_1tr8w"]
+[ext_resource type="Script" uid="uid://ckf1jwcbvo6dj" path="res://scripts/weapon_data.gd" id="4_dukhx"]
+[ext_resource type="ArrayMesh" uid="uid://blh34cq3m8r7d" path="res://assets/rocketlauncher/OBJ/q3rocket.obj" id="5_1tr8w"]
+[ext_resource type="Texture2D" uid="uid://63mckj7mmro5" path="res://assets/rocketlauncher/Textures/PNG/rocketl.png" id="6_t3l5s"]
+[ext_resource type="Texture2D" uid="uid://lv84s1dc8dkm" path="res://assets/rocketlauncher/Textures/PNG/rocketl2.png" id="7_iwiot"]
+
+[sub_resource type="Resource" id="Resource_wg8vf"]
+script = ExtResource("2_a5yl0")
+projectile = ExtResource("2_45cpp")
+projectile_speed = 32.0
+metadata/_custom_type_script = "uid://c3drov6fdw0e3"
+
+[sub_resource type="Resource" id="Resource_r8ms6"]
+script = ExtResource("4_dukhx")
+name = "Rocket Launcher"
+hit_decal = ExtResource("4_1tr8w")
+max_ammo_count = 0
+fire_rate = 3.0
+damage = 30.0
+fire_strategy = SubResource("Resource_wg8vf")
+metadata/_custom_type_script = "uid://ckf1jwcbvo6dj"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5c4nm"]
+albedo_texture = ExtResource("6_t3l5s")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wx6gk"]
+albedo_texture = ExtResource("7_iwiot")
+
+[node name="Rocketlauncher" type="Node3D"]
+script = ExtResource("1_hwi7l")
+data = SubResource("Resource_r8ms6")
+metadata/_custom_type_script = "uid://xfxkyhr4wce6"
+
+[node name="Q3Rocket" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.03, 0, 0, 0, 0.03, 0, 0, 0, 0.03, 0, 0, 0)
+mesh = ExtResource("5_1tr8w")
+surface_material_override/0 = SubResource("StandardMaterial3D_5c4nm")
+surface_material_override/1 = SubResource("StandardMaterial3D_wx6gk")
+
+[node name="Marker3D" type="Marker3D" parent="." groups=["fire_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.042785093, 0.8562337)

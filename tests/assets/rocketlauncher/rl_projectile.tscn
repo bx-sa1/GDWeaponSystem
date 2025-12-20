@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3uaq4a0j3t6p"]
+
+[ext_resource type="Script" uid="uid://dp0pi8vyo3yal" path="res://scripts/extras/projectile.gd" id="1_inn7f"]
+[ext_resource type="PackedScene" uid="uid://d11qkqicqd4" path="res://assets/rocketlauncher/splash.tscn" id="2_8f6g3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_inn7f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_inn7f"]
+
+[node name="RlProjectile" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 5
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 16
+linear_damp = 0.1
+angular_damp = 0.1
+script = ExtResource("1_inn7f")
+explosion = ExtResource("2_8f6g3")
+metadata/_custom_type_script = "uid://dp0pi8vyo3yal"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_inn7f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_inn7f")

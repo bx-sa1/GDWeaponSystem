@@ -1,8 +1,8 @@
 class_name GunFireStrategy extends WeaponFireStrategy
 
 
-func fire(weapon: Weapon, origin: Vector3, dir: Vector3, collision_mask: int) -> WeaponHit:
-	return null
+func fire(weapon: Weapon, origin: Vector3, dir: Vector3, collision_mask: int) -> void:
+	return
 
 func _initial_hit_test(weapon: Weapon, origin: Vector3, dir: Vector3, collision_mask: int) -> Vector3:
 	var ray_start = origin

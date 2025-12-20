@@ -3,7 +3,7 @@ class_name MuzzleFlashPostFireStrategy extends WeaponPostFireStrategy
 @export var muzzle_flash_scene: PackedScene
 @export var muzzle_flash_time: float = 0.2
 
-func postfire(weapon: Weapon, hit: WeaponHit) -> void:
+func postfire(weapon: Weapon) -> void:
 	var fire_point = weapon.get_fire_point()
 	if fire_point == null:
 		return

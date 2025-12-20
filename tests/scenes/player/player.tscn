@@ -6,10 +6,10 @@
 [ext_resource type="Script" uid="uid://dlq2qxhg2j3il" path="res://addons/GDPlayerControllers/scripts/camera/camera_controller.gd" id="4_1jxqw"]
 [ext_resource type="Script" uid="uid://gp7pi5lovebm" path="res://scripts/weapon_controller.gd" id="4_2hs0m"]
 [ext_resource type="Script" uid="uid://b0jct33h5r1cr" path="res://addons/GDPlayerControllers/scripts/components/jump_component.gd" id="4_b26j0"]
-[ext_resource type="Script" uid="uid://xnl31viqwwvr" path="res://scripts/extras/fps_viewmodel.gd" id="4_dw050"]
 [ext_resource type="PackedScene" uid="uid://dg3dcjh6occwm" path="res://assets/crowbar/crowbar.tscn" id="6_b26j0"]
 [ext_resource type="PackedScene" uid="uid://shwpyanl25m5" path="res://assets/pistol/pistol.tscn" id="9_n7ghd"]
 [ext_resource type="PackedScene" uid="uid://ek0lf8mau85p" path="res://assets/shotgun/shotgun.tscn" id="10_nvl01"]
+[ext_resource type="PackedScene" uid="uid://baai6vyw6du3e" path="res://assets/rocketlauncher/rocketlauncher.tscn" id="11_je7p5"]
 
 [sub_resource type="Resource" id="Resource_1jxqw"]
 script = ExtResource("3_2hs0m")
@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dksuroetqt32s"
 
 [sub_resource type="Resource" id="Resource_dw050"]
 script = ExtResource("4_b26j0")
-jump_height = 25.0
+jump_height = 30.0
 always_active = false
 default_active = false
 metadata/_custom_type_script = "uid://b0jct33h5r1cr"
@@ -51,16 +51,14 @@ metadata/_custom_type_script = "uid://dlq2qxhg2j3il"
 
 [node name="Camera3D" type="Camera3D" parent="CameraController"]
 
-[node name="FpsViewmodel" type="Node3D" parent="CameraController/Camera3D" node_paths=PackedStringArray("weapon_controller")]
+[node name="FpsViewmodel" type="Node3D" parent="CameraController/Camera3D"]
 transform = Transform3D(-0.98357147, 0, 0.18051925, 0, 1, 0, -0.18051925, 0, -0.98357147, 0.3, -0.335, -0.475)
-script = ExtResource("4_dw050")
-weapon_controller = NodePath("../../../WeaponController")
-metadata/_custom_type_script = "uid://xnl31viqwwvr"
 
 [node name="WeaponController" type="Node3D" parent="." node_paths=PackedStringArray("parent_node")]
 unique_name_in_owner = true
 script = ExtResource("4_2hs0m")
+ray_collision_mask = 5
 parent_node = NodePath("../CameraController/Camera3D/FpsViewmodel")
-weapon_list = Array[PackedScene]([ExtResource("6_b26j0"), ExtResource("9_n7ghd"), ExtResource("10_nvl01")])
+weapon_list = Array[PackedScene]([ExtResource("6_b26j0"), ExtResource("9_n7ghd"), ExtResource("10_nvl01"), ExtResource("11_je7p5")])
 give_all_weapons = true
 metadata/_custom_type_script = "uid://gp7pi5lovebm"

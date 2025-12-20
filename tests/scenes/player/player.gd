@@ -19,3 +19,6 @@ func _physics_process(delta: float) -> void:
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	move(delta, input_dir)
+
+func _on_weapon_hit_explosion_impulse(weapon: Weapon, impulse: Vector3):
+	velocity += impulse

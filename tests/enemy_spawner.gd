@@ -1,6 +1,6 @@
 class_name EnemySpawner extends Node3D
 
-const enemy = preload("res://enemy.tscn")
+const enemy = preload("res://scenes/enemy/enemy.tscn")
 
 var timer := Timer.new()
 
