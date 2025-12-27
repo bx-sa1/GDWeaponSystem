@@ -1,6 +1,5 @@
 class_name ProjectileExplosion extends Area3D
 
-@export_custom(PROPERTY_HINT_EXPRESSION, "suffix:s")  var ttl: float = 3.0
 @export var force: float = 1.0
 @export var force_decay_rate: float = 1.0
 
@@ -10,9 +9,6 @@ func _ready() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	_push_bodies()
-
-	var timer = get_tree().create_timer(ttl)
-	timer.timeout.connect(func(): self.queue_free())
 
 func _push_bodies() -> void:
 	for body in get_overlapping_bodies():

@@ -10,6 +10,11 @@ func _ready() -> void:
 		printerr("_weapon not properly assigned")
 		queue_free()
 
+	continuous_cd = true
+	contact_monitor = true
+	max_contacts_reported = 1
+
+
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if state.get_contact_count() > 0:
 		var pos: Vector3 = state.get_contact_local_position(0)
@@ -17,7 +22,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var col: Node = state.get_contact_collider_object(0)
 		if explosion:
 			var e = explosion.instantiate()
-			assert(e is ProjectileExplosion)
+			assert(e is ProjectileExplosion, "explosion is not a ProjectileExplosion")
 			add_sibling(e)
 			e.global_position = pos
 			(e as ProjectileExplosion)._weapon = _weapon
