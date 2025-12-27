@@ -49,7 +49,7 @@ func get_fire_point() -> Node3D:
 	return null
 
 func add_decal_to_world(position: Vector3, normal: Vector3):
-	if data.hit_decal == null:
+	if not data.hit_decal:
 		return
 
 	var decal: Node3D = data.hit_decal.instantiate()
