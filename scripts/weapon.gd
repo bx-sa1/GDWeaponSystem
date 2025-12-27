@@ -13,7 +13,7 @@ func reload() -> void:
 	print("reload")
 	data.reload(func():
 		if owner.has_method(owner_on_weapon_reload_method_name):
-			await owner.get(owner_on_weapon_reload_method_name).call()
+			await owner.get(owner_on_weapon_reload_method_name).call(self)
 		else:
 			await get_tree().create_timer(1).timeout)
 
@@ -35,7 +35,7 @@ func fire(origin: Vector3, dir: Vector3, collision_mask: int) -> void:
 			post.postfire(self)
 
 	if owner.has_method(owner_on_weapon_fire_method_name):
-		owner.get(owner_on_weapon_fire_method_name).call()
+		owner.get(owner_on_weapon_fire_method_name).call(self)
 
 
 func _process(delta: float) -> void:
@@ -49,6 +49,9 @@ func get_fire_point() -> Node3D:
 	return null
 
 func add_decal_to_world(position: Vector3, normal: Vector3):
+	if data.hit_decal == null:
+		return
+
 	var decal: Node3D = data.hit_decal.instantiate()
 	get_tree().get_root().add_child(decal)
 

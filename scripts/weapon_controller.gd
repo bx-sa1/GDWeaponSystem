@@ -38,7 +38,6 @@ func _ready() -> void:
 
 	if give_all_weapons:
 		give_weapon("debug_all")
-	change_weapon(0)
 
 func is_fire_pressed(fire_action: String) -> bool:
 	var weapon = get_current_weapon()
